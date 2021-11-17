@@ -39,7 +39,7 @@ class ImportRepositoriesCommand extends Command {
 		$helper = $this->getHelper('question');
 
 		if (!$organisation) {
-			$question = new Question('Please enter the name of the organisation (default: octocat):', 'octocat');
+			$question = new Question('Please enter the name of the organisation (default: octokit):', 'octokit');
 			$organisation = $helper->ask($input, $output, $question);
 		}
 
