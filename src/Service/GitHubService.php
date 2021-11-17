@@ -15,6 +15,8 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 class GitHubService {
 	private HttpClientInterface $client;
 
+	private static int $itemsPerPage = 100;
+
 	public function __construct(HttpClientInterface $client) {
 		$this->client = $client->withOptions([
 			'base_uri' => 'https://api.github.com',
@@ -36,10 +38,10 @@ class GitHubService {
 		$page = 0;
 
 		do {
-			$response = $this->client->request('GET', sprintf('/orgs/%s/repos?per_page=100&page=%s', $organisation, ++$page));
+			$response = $this->client->request('GET', sprintf('/orgs/%s/repos?per_page=%s&page=%s', $organisation, self::$itemsPerPage, ++$page));
 			$fetchedRepositories = $response->toArray();
 			$repositories = array_merge($fetchedRepositories, $repositories);
-		} while (count($fetchedRepositories) > 0);
+		} while (count($fetchedRepositories) === self::$itemsPerPage);
 
 		$repositories = array_map(function ($repository) {
 			return (new GitRepository())
@@ -73,12 +75,12 @@ class GitHubService {
 		$commitCount = 0;
 
 		do {
-			$response = $this->client->request('GET', sprintf('/repos/%s/contributors?per_page=100&page=%s', $repository['full_name'], ++$page));
+			$response = $this->client->request('GET', sprintf('/repos/%s/contributors?per_page=%s&page=%s', $repository['full_name'], self::$itemsPerPage, ++$page));
 			$contributors = $response->toArray();
 			$commitCount += array_reduce($contributors, function ($acc, $item) {
 				return $acc + $item['contributions'];
 			});
-		} while (count($contributors) > 0);
+		} while (count($contributors) === self::$itemsPerPage);
 
 		return $commitCount;
 	}
