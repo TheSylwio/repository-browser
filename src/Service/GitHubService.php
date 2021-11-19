@@ -30,8 +30,10 @@ class GitHubService {
 	 * @throws TransportExceptionInterface
 	 * @throws Exception
 	 * @throws DecodingExceptionInterface
+	 *
+	 * @return GitRepository[]
 	 */
-	public function fetchRepositories(string $organisation) {
+	public function fetchRepositories(string $organisation): array {
 		$this->checkOrganisation($organisation);
 
 		$repositories = [];
@@ -43,11 +45,11 @@ class GitHubService {
 			$repositories = array_merge($fetchedRepositories, $repositories);
 		} while (count($fetchedRepositories) === self::$itemsPerPage);
 
-		$repositories = array_map(function ($repository) {
+		return array_map(function ($repository) {
 			return (new GitRepository())
 				->setName($repository['name'])
 				->setCommitCount($this->getRepositoryCommitCount($repository))
-				->setPullRequestsCount(0)
+				->setPullRequestsCount($this->getPullRequestsCount($repository))
 				->setStarsCount($repository['stargazers_count']);
 		}, $repositories);
 	}
@@ -83,5 +85,18 @@ class GitHubService {
 		} while (count($contributors) === self::$itemsPerPage);
 
 		return $commitCount;
+	}
+
+	private function getPullRequestsCount(array $repository): int {
+		$page = 0;
+		$pullRequestCount = 0;
+
+		do {
+			$response = $this->client->request('GET', sprintf('/repos/%s/pulls?state=all&per_page=%s&page=%s', $repository['full_name'], self::$itemsPerPage, ++$page));
+			$pullRequests = $response->toArray();
+			$pullRequestCount += count($pullRequests);
+		} while (count($pullRequests) === self::$itemsPerPage);
+
+		return $pullRequestCount;
 	}
 }

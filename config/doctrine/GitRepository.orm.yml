@@ -1,0 +1,17 @@
+App\Entity\GitRepository:
+    type: entity
+    table: git_repository
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+        pullRequestsCount:
+            type: integer
+        commitCount:
+            type: integer
+        starsCount:
+            type: integer

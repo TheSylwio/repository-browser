@@ -3,10 +3,15 @@
 namespace App\Entity;
 
 class GitRepository {
+	private int $id;
 	private string $name;
 	private int $pullRequestsCount;
 	private int $commitCount;
 	private int $starsCount;
+
+	public function getId(): int {
+		return $this->id;
+	}
 
 	public function getName(): string {
 		return $this->name;
