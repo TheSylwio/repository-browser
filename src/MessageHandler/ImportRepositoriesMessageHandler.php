@@ -28,7 +28,12 @@ final class ImportRepositoriesMessageHandler implements MessageHandlerInterface 
 		switch ($message->getProvider()) {
 			case 'GitHub':
 				$repositories = $this->githubService->fetchRepositories($message->getOrganisation());
-				$this->gitService->saveRepositories($repositories);
+				$provider = $this->gitService->getProviderEntity($message->getOrganisation(), $message->getProvider());
+				$this->gitService->saveRepositories($repositories, $provider);
+				break;
+			case 'BitBucket':
+			case 'GitLab':
+				echo 'Not implemented yet.';
 				break;
 			default:
 				throw new Exception('Passed incorrect git provider');

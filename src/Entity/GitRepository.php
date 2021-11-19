@@ -8,6 +8,7 @@ class GitRepository {
 	private int $pullRequestsCount;
 	private int $commitCount;
 	private int $starsCount;
+	private GitProvider $provider;
 
 	public function getId(): int {
 		return $this->id;
@@ -47,5 +48,13 @@ class GitRepository {
 	public function setStarsCount(int $starsCount): static {
 		$this->starsCount = $starsCount;
 		return $this;
+	}
+
+	public function getProvider(): GitProvider {
+		return $this->provider;
+	}
+
+	public function setProvider(GitProvider $provider): void {
+		$this->provider = $provider;
 	}
 }

@@ -15,3 +15,7 @@ App\Entity\GitRepository:
             type: integer
         starsCount:
             type: integer
+    manyToOne:
+        provider:
+            targetEntity: GitProvider
+            inversedBy: repositories
