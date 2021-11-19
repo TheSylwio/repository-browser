@@ -1,0 +1,17 @@
+App\Entity\GitProvider:
+    type: entity
+    table: git_provider
+    fields:
+        id:
+            type: integer
+            id: true
+            generator:
+                strategy: AUTO
+        organisation:
+            type: string
+        name:
+            type: string
+    oneToMany:
+        repositories:
+            targetEntity: GitRepository
+            mappedBy: provider
