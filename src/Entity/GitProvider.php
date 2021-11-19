@@ -2,10 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\GitProviderInterface;
 use Doctrine\ORM\PersistentCollection;
 
-class GitProvider implements GitProviderInterface {
+class GitProvider {
 	private int $id;
 	private string $organisation;
 	private PersistentCollection $repositories;
